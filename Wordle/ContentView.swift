@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var game = WorldeGame(targetWord: ["А", "Н", "И", "М", "Е"])
-    
+    @State var game = WorldeGame()
     var body: some View {
         NavigationStack {
             VStack(spacing: 15) {
@@ -23,26 +22,47 @@ struct ContentView: View {
                 Spacer()
                 Keyboard(game: $game)
             }
+            .overlay(
+                Text("Слово должно содержать 5 букв")
+                    .showAlerts(game.isShowAlertsMinLetter)
+                
+            )
+            .overlay(
+                VStack {
+                    Text("Вы проиграли")
+                    Text("Загаданное слово - \(game.showTargetWord())")
+                }
+                    .showAlerts(game.isShowAlertsAttempting)
+            )
+            .overlay(
+                Text("Вы выйграли")
+                    .showAlerts(game.isWin)
+                
+            )
+            .overlay(content: {
+                Text("Нет такого слова в словаре")
+                    .showAlerts(game.isCantFindWord)
+            })
             .padding(.top, 20)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .background(.mainBg)
-        .toolbar(content: {
-            ToolbarItem(placement: .topBarTrailing) {
-                //TimerView()
-                Text("1'23\"")
-                    .font(Font.custom("Chalkboard SE", size: 20))
-            }
-            ToolbarItem(placement: .principal) {
-                HStack(spacing: 0) {
-                    Text("Уровень")
-                    Text(" #1")
+            .background(.mainBg)
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarTrailing) {
+                    // TimerView()
+                    Text("1'23\"")
                         .font(Font.custom("Chalkboard SE", size: 20))
-                        
                 }
-            }
-        })
-        .navigationBarTitleDisplayMode(.inline)
+                ToolbarItem(placement: .principal) {
+                    HStack(spacing: 0) {
+                        Text("Уровень")
+                        Text(" #1")
+                            .font(Font.custom("Chalkboard SE", size: 20))
+                        
+                    }
+                }
+            })
+            .navigationBarTitleDisplayMode(.inline)
+        }
     }
 }
 
